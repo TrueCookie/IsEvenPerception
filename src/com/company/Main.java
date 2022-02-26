@@ -18,7 +18,7 @@ public class Main {
         LocalDateTime now = LocalDateTime.now();
         String startTime = dtf.format(now);
 
-        HashSet<SimpleEntry<BufferedImage, Boolean>> markedData = DataPreparator.getMarkedData("resources/learn");
+        HashSet<ArrayList<Object>> markedData = DataPreparator.getMarkedData("resources/learn");
 
         Neuro neuro1 = new Neuro();
 
@@ -33,40 +33,51 @@ public class Main {
 
         //TEST
         System.out.println("<<<<<<<<<<<<<<<<<<<<<______________TEST____________>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
-        HashSet<SimpleEntry<BufferedImage, Boolean>> testData = DataPreparator.getMarkedData("resources/test");
-        int testIterCount = traceSamples(neuro1, markedData, Mode.TEST);
+        HashSet<ArrayList<Object>> testData = DataPreparator.getMarkedData("resources/test");
+        int testIterCount = traceSamples(neuro1, testData, Mode.TEST);
 
         System.out.println(testIterCount);
     }
 
-    private static int traceSamples(Neuro neuro, HashSet<SimpleEntry<BufferedImage, Boolean>> markedData, Mode mode){
+    private static int traceSamples(Neuro neuro, HashSet<ArrayList<Object>> markedData, Mode mode){
         int iterCount = 0;
         boolean errorFlag = true;
         while (errorFlag) {
             errorFlag = false;
-            for (SimpleEntry<BufferedImage, Boolean> sample : markedData){
+            for (ArrayList<Object> sample : markedData){
                 boolean singleErrorFlag = false;
-                boolean resIsEven = neuro.isEven(sample.getKey());
-                boolean answerIsEven = sample.getValue();
+
+                boolean resIsEven = neuro.isEven((BufferedImage) sample.get(0));
+                boolean answerIsEven = (boolean) sample.get(1);
+                int desc = (int) sample.get(2);
 
                 if (!resIsEven && answerIsEven) {      //First Hebbian Rule
                     if(mode == Mode.TEACH){ neuro.teach(1);}
                     singleErrorFlag = true;
-                    System.out.println("FAIL");
                 } else if (resIsEven && !answerIsEven) { //Second Hebbian Rule
                     if(mode == Mode.TEACH){ neuro.teach(2);}
                     singleErrorFlag = true;
-                    System.out.println("FAIL");
                 }else {
-                    System.out.println("SUCCESS");
+                    System.out.println(desc + " - " + getResString(resIsEven) + " - SUCCESS");
                 }
 
-                if(singleErrorFlag) errorFlag = true; //Если была хотя бы одна ошибка
+                if(singleErrorFlag){    //Если была хотя бы одна ошибка
+                    if(mode == Mode.TEACH){ errorFlag = true;}
+                    System.out.println(desc + " - " + getResString(resIsEven) + " - FAIL");
+                }
             }
             System.out.println("-------------------------------------->");
             iterCount++;
         }
 
         return iterCount;
+    }
+
+    private static String getResString(boolean resIsEven){
+        if(resIsEven){
+            return "Even";
+        }else{
+            return "Odd ";
+        }
     }
 }
