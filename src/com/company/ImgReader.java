@@ -44,7 +44,7 @@ public class ImgReader {
     public static void printImgArr(int[] imgArr){
         for (int i = 0; i < 64; i++) {
             if (i % 8 == 0){ System.out.print("\n");}
-            System.out.print(imgArr[i]);
+            System.out.print(imgArr[i] + " ");
         }
     }
 

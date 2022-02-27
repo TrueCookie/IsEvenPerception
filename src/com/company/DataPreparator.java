@@ -13,7 +13,6 @@ public class DataPreparator {
         int desc = getFileNameNumber(filePath);
         boolean isEvenAnswer = isEven(desc);
 
-        //return new SimpleEntry<>(bufferedImage, isEvenAnswer);
         return new ArrayList<>(){
             {
                 add(bufferedImage);

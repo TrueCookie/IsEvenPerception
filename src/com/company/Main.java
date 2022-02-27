@@ -65,6 +65,8 @@ public class Main {
                     if(mode == Mode.TEACH){ errorFlag = true;}
                     System.out.println(desc + " - " + getResString(resIsEven) + " - FAIL");
                 }
+
+                //neuro.printWeights();
             }
             System.out.println("-------------------------------------->");
             iterCount++;
